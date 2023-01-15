@@ -11,6 +11,8 @@
 		032CF40D29737CCB0001734A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032CF40C29737CCB0001734A /* ContentView.swift */; };
 		032CF40F29737CCC0001734A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 032CF40E29737CCC0001734A /* Assets.xcassets */; };
 		032CF41229737CCC0001734A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 032CF41129737CCC0001734A /* Preview Assets.xcassets */; };
+		032CF4192973818B0001734A /* Joke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032CF4182973818B0001734A /* Joke.swift */; };
+		03377C6E2975B3F300EC450A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03377C6D2975B3F300EC450A /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,8 @@
 		032CF40C29737CCB0001734A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		032CF40E29737CCC0001734A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		032CF41129737CCC0001734A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		032CF4182973818B0001734A /* Joke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joke.swift; sourceTree = "<group>"; };
+		03377C6D2975B3F300EC450A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +57,8 @@
 			children = (
 				032CF40A29737CCB0001734A /* DadJokeApp.swift */,
 				032CF40C29737CCB0001734A /* ContentView.swift */,
+				032CF4182973818B0001734A /* Joke.swift */,
+				03377C6D2975B3F300EC450A /* Extensions.swift */,
 				032CF40E29737CCC0001734A /* Assets.xcassets */,
 				032CF41029737CCC0001734A /* Preview Content */,
 			);
@@ -139,6 +145,8 @@
 			files = (
 				032CF40D29737CCB0001734A /* ContentView.swift in Sources */,
 				032CF40B29737CCB0001734A /* DadJokeApp.swift in Sources */,
+				032CF4192973818B0001734A /* Joke.swift in Sources */,
+				03377C6E2975B3F300EC450A /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
