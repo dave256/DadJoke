@@ -10,6 +10,12 @@ import Foundation
 struct Joke: Identifiable, Equatable, Hashable, Codable {
     var id: String
     var joke: String
+    var isFavorite = false
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case joke
+    }
 
     func setup() -> String {
         // first get rid of any whitespace at end and then any punctuation characters at the end
