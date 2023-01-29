@@ -6,10 +6,17 @@
 //
 
 import SwiftUI
+import Boutique
+
+extension Store where Item == Joke {
+    static let favoriteJokesStore = Store<Joke>(storage: SQLiteStorageEngine.default(appendingPath: "Favorites"))
+}
 
 @MainActor
 final class JokeModel: ObservableObject {
     @Published var jokes: [Joke] = []
+    @Stored(in: .favoriteJokesStore) var favoritesStore: [Joke]
+
     var existingIDs: Set<String> = []
 
     func addNewJoke(jokeID: String = "") {
@@ -109,22 +116,63 @@ final class JokeModel: ObservableObject {
     }
 }
 
-struct ContentView: View {
-    @StateObject private var model = JokeModel()
+struct JokeDetailView: View {
+    @ObservedObject var model: JokeModel
+    @Binding var joke: Joke
+
+    var body: some View {
+        VStack {
+            Text(joke.joke)
+                .padding(.bottom, 24)
+            Button {
+                toggleFavorite()
+            } label: {
+                Group {
+                    if joke.isFavorite {
+                        Label("Unfavorite", systemImage: "heart.fill")
+                    } else {
+                        Label("Favorite", systemImage: "heart.slash")
+                    }
+                }
+                .foregroundColor(.red)
+            }
+            .padding(.bottom, 48)
+            Text(joke.id)
+            Spacer()
+        }
+        .padding()
+    }
+
+    func toggleFavorite() {
+        joke.isFavorite.toggle()
+        Task {
+            do {
+                if joke.isFavorite {
+                    try await model.$favoritesStore.insert(joke)
+                } else {
+                    try await model.$favoritesStore.remove(joke)
+                }
+            } catch {
+                if joke.isFavorite {
+                    print("error marking favorite", error)
+                } else {
+                    print("error removing from favorites", error)
+                }
+            }
+        }
+    }
+}
+
+struct JokeView: View {
+    @ObservedObject var model: JokeModel
 
     var body: some View {
         NavigationStack {
             List {
-                ForEach(model.jokes) { joke in
+                ForEach($model.jokes) { $joke in
                     NavigationLink(joke.setup()) {
                         // fire and forget navigation to a view with the full joke
-                        VStack {
-                            Text(joke.joke)
-                            Spacer()
-                            Text(joke.id)
-                            Spacer()
-                        }
-                        .padding()
+                        JokeDetailView(model: model, joke: $joke)
                     }
                 }
                 .onDelete(perform: deleteJokes)
@@ -154,6 +202,58 @@ struct ContentView: View {
 
     func deleteJokes(at offfsets: IndexSet) {
         model.removeJokes(at: offfsets)
+    }
+}
+
+struct FavoriteJokesView: View {
+    @ObservedObject var model: JokeModel
+    @State private var favoriteJokes: [Joke] = []
+
+    var body: some View {
+        List {
+            ForEach(favoriteJokes) { joke in
+                Text("\(joke.joke)")
+            }
+            .onDelete(perform: deleteFavorites)
+        }
+        .onReceive(model.$favoritesStore.$items, perform: { jokes in
+            favoriteJokes = jokes
+        })
+        .task {
+            favoriteJokes = model.favoritesStore
+        }
+    }
+
+    func deleteFavorites(at offfsets: IndexSet) {
+        for index in offfsets.reversed() {
+            let joke = favoriteJokes[index]
+            // need to update in list of all jokes also
+            if let index = model.jokes.firstIndex(where: { $0.id == joke.id } ) {
+                model.jokes[index].isFavorite = false
+            }
+            Task {
+                do {
+                    try await model.$favoritesStore.remove(joke)
+                } catch {}
+            }
+        }
+    }
+}
+
+struct ContentView: View {
+    @StateObject private var model = JokeModel()
+
+    var body: some View {
+        TabView {
+            JokeView(model: model)
+                .tabItem {
+                    Label("Jokes", systemImage: "network")
+                }
+            FavoriteJokesView(model: model)
+                .tabItem {
+                    Label("Favorites", systemImage: "heart.fill")
+                }
+        }
     }
 }
 

@@ -13,6 +13,7 @@
 		032CF41229737CCC0001734A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 032CF41129737CCC0001734A /* Preview Assets.xcassets */; };
 		032CF4192973818B0001734A /* Joke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032CF4182973818B0001734A /* Joke.swift */; };
 		03377C6E2975B3F300EC450A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03377C6D2975B3F300EC450A /* Extensions.swift */; };
+		0384D1372985E5A5007267D9 /* Boutique in Frameworks */ = {isa = PBXBuildFile; productRef = 0384D1362985E5A5007267D9 /* Boutique */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0384D1372985E5A5007267D9 /* Boutique in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +91,9 @@
 			dependencies = (
 			);
 			name = DadJoke;
+			packageProductDependencies = (
+				0384D1362985E5A5007267D9 /* Boutique */,
+			);
 			productName = DadJoke;
 			productReference = 032CF40729737CCB0001734A /* DadJoke.app */;
 			productType = "com.apple.product-type.application";
@@ -117,6 +122,9 @@
 				Base,
 			);
 			mainGroup = 032CF3FE29737CCB0001734A;
+			packageReferences = (
+				0384D1352985E5A5007267D9 /* XCRemoteSwiftPackageReference "Boutique" */,
+			);
 			productRefGroup = 032CF40829737CCB0001734A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -347,6 +355,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0384D1352985E5A5007267D9 /* XCRemoteSwiftPackageReference "Boutique" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mergesort/Boutique";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 2.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0384D1362985E5A5007267D9 /* Boutique */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0384D1352985E5A5007267D9 /* XCRemoteSwiftPackageReference "Boutique" */;
+			productName = Boutique;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 032CF3FF29737CCB0001734A /* Project object */;
 }
