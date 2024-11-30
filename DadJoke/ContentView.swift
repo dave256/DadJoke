@@ -55,7 +55,7 @@ final class JokeModel: ObservableObject {
         do {
             let jokes = try await SearchJokes.fetchAndDecodeJSON(urlRequest: request)
             return jokes.results
-        } catch FetchAndDecodeError.notHTTPURLReponse(let urlResponse) {
+        } catch FetchAndDecodeError.notHTTPURLResponse(let urlResponse) {
             print("response error", urlResponse)
         } catch FetchAndDecodeError.httpStatus(let status) {
             print("status error code", status)
@@ -77,7 +77,7 @@ final class JokeModel: ObservableObject {
         do {
             let joke = try await Joke.fetchAndDecodeJSON(urlRequest: request)
             return joke
-        } catch FetchAndDecodeError.notHTTPURLReponse(let urlResponse) {
+        } catch FetchAndDecodeError.notHTTPURLResponse(let urlResponse) {
             print("response error", urlResponse)
         } catch FetchAndDecodeError.httpStatus(let status) {
             print("status error code", status)
