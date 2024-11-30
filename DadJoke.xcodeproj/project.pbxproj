@@ -361,7 +361,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mergesort/Boutique";
 			requirement = {
-				kind = upToNextMinorVersion;
+				kind = upToNextMajorVersion;
 				minimumVersion = 2.1.0;
 			};
 		};
