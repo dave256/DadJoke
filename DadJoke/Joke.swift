@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Joke: Identifiable, Equatable, Hashable, Codable {
+struct Joke: Identifiable, Hashable, Codable {
     var id: String
     var joke: String
 
@@ -33,36 +33,62 @@ struct Joke: Identifiable, Equatable, Hashable, Codable {
         return joke
     }
 
-    static var urlComponents: URLComponents {
+    enum RequestType {
+        case random
+        case byID(String)
+    }
+
+    static var baseComponents: URLComponents {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "icanhazdadjoke.com"
         return components
     }
 
-    static var request: URLRequest {
-        let components = Joke.urlComponents
-        var request = URLRequest(url: components.url!)
-        request.httpMethod = "GET"
-        // specify the header for JSON format of the joke
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        return request
+    static func urlComponents(for type: RequestType) -> URLComponents {
+        var components = Joke.baseComponents
+        switch type {
+            case .random:
+                components.path = "/"
+            case .byID(let id):
+                components.path = "/j/\(id)"
+        }
+        return components
     }
 
-    static func request(jokeID: String) -> URLRequest {
-        var components = Joke.urlComponents
-        components.path = "/j/\(jokeID)"
-
-        var request = URLRequest(url: components.url!)
+    static func urlRequest(for type: RequestType) -> URLRequest? {
+        let components = Self.urlComponents(for: type)
+        guard let url = components.url else { return nil }
+        var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
         // specify the header for JSON format of the joke
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         return request
     }
 }
 
-struct SearchJokes: Codable {
+struct JokeSearchConfig {
+    var searchTerm: String?
+    var page: Int?
+    var limit: Int?
+
+    func queryItems() -> [URLQueryItem] {
+        var items: [String: LosslessStringConvertible] = [:]
+        if let searchTerm { items["term"] = searchTerm }
+        if let page { items["page"] = page }
+        if let limit { items["limit"] = limit }
+        let queryItems: [URLQueryItem] = .init(items)
+        return queryItems
+    }
+}
+
+extension JokeSearchConfig {
+    init(searchTerm: String) {
+        self.init(searchTerm: searchTerm, page: nil, limit: nil)
+    }
+}
+
+public struct JokeSearch: Codable {
     let status: Int
     let limit: Int
     let results: [Joke]
@@ -85,17 +111,109 @@ struct SearchJokes: Codable {
         case results
     }
 
-    static func request(searchTerm: String) -> URLRequest {
-        var components = Joke.urlComponents
+    static func urlRequest(for search: JokeSearchConfig) -> URLRequest? {
+        var components = Joke.baseComponents
         components.path = "/search"
-        components.queryItems = [
-            URLQueryItem(name: "term", value: searchTerm)
-        ]
-        var request = URLRequest(url: components.url!)
+        components.queryItems = search.queryItems()
+        guard let url = components.url else { return nil }
+        var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
         // specify the header for JSON format of the joke
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         return request
     }
 }
+
+
+//struct Joke: Identifiable, Equatable, Hashable, Codable {
+//    var id: String
+//    var joke: String
+//
+//    func setup() -> String {
+//        // first get rid of any whitespace at end and then any punctuation characters at the end
+//        let trimmedJoke = joke.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .punctuationCharacters)
+//        // now look for last occurence of one of these characters hoping that is where the setup ends
+//        let setupSeparator: Array<Character> = ["?", ".", "!", ":", ";", "-", "-", ","]
+//        // check in order so we can prioritize certain characters as being most likely to end the setup
+//        for ch in setupSeparator {
+//            // if find one return up to that as the setup
+//            if let index = trimmedJoke.lastIndex(of: ch) {
+//                return String(joke[...index])
+//            }
+//        }
+//
+//        // if didn't find any punctuation, look for the word but and return setup as up to but not including "but"
+//        if let range = joke.range(of: "but", options: [.backwards, .caseInsensitive]) {
+//            return String(joke[..<range.lowerBound])
+//        }
+//
+//        // default to returning the entire joke if couldn't find one
+//        return joke
+//    }
+//
+//    static var urlComponents: URLComponents {
+//        var components = URLComponents()
+//        components.scheme = "https"
+//        components.host = "icanhazdadjoke.com"
+//        return components
+//    }
+//
+//    static var request: URLRequest {
+//        let components = Joke.urlComponents
+//        var request = URLRequest(url: components.url!)
+//        request.httpMethod = "GET"
+//        // specify the header for JSON format of the joke
+//        request.setValue("application/json", forHTTPHeaderField: "Accept")
+//        return request
+//    }
+//
+//    static func request(jokeID: String) -> URLRequest {
+//        var components = Joke.urlComponents
+//        components.path = "/j/\(jokeID)"
+//
+//        var request = URLRequest(url: components.url!)
+//        request.httpMethod = "GET"
+//
+//        // specify the header for JSON format of the joke
+//        request.setValue("application/json", forHTTPHeaderField: "Accept")
+//        return request
+//    }
+//}
+//
+//struct SearchJokes: Codable {
+//    let status: Int
+//    let limit: Int
+//    let results: [Joke]
+//    let nextPage: Int
+//    let previousPage: Int
+//    let totalPages: Int
+//    let totalJokes: Int
+//    let searchTerm: String
+//    let currentPage: Int
+//
+//    enum CodingKeys: String, CodingKey {
+//        case nextPage = "next_page"
+//        case previousPage = "previous_page"
+//        case totalPages = "total_pages"
+//        case totalJokes = "total_jokes"
+//        case searchTerm = "search_term"
+//        case currentPage = "current_page"
+//        case status
+//        case limit
+//        case results
+//    }
+//
+//    static func request(searchTerm: String) -> URLRequest {
+//        var components = Joke.urlComponents
+//        components.path = "/search"
+//        components.queryItems = [
+//            URLQueryItem(name: "term", value: searchTerm)
+//        ]
+//        var request = URLRequest(url: components.url!)
+//        request.httpMethod = "GET"
+//
+//        // specify the header for JSON format of the joke
+//        request.setValue("application/json", forHTTPHeaderField: "Accept")
+//        return request
+//    }
+//}

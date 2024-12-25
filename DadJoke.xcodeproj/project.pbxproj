@@ -12,7 +12,7 @@
 		032CF40F29737CCC0001734A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 032CF40E29737CCC0001734A /* Assets.xcassets */; };
 		032CF41229737CCC0001734A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 032CF41129737CCC0001734A /* Preview Assets.xcassets */; };
 		032CF4192973818B0001734A /* Joke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032CF4182973818B0001734A /* Joke.swift */; };
-		03377C6E2975B3F300EC450A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03377C6D2975B3F300EC450A /* Extensions.swift */; };
+		03693E5E2D1B89C2000C1110 /* FetchJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 03693E5D2D1B89C2000C1110 /* FetchJSON */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,7 +22,6 @@
 		032CF40E29737CCC0001734A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		032CF41129737CCC0001734A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		032CF4182973818B0001734A /* Joke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joke.swift; sourceTree = "<group>"; };
-		03377C6D2975B3F300EC450A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03693E5E2D1B89C2000C1110 /* FetchJSON in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,7 +58,6 @@
 				032CF40A29737CCB0001734A /* DadJokeApp.swift */,
 				032CF40C29737CCB0001734A /* ContentView.swift */,
 				032CF4182973818B0001734A /* Joke.swift */,
-				03377C6D2975B3F300EC450A /* Extensions.swift */,
 				032CF40E29737CCC0001734A /* Assets.xcassets */,
 				032CF41029737CCC0001734A /* Preview Content */,
 			);
@@ -101,7 +100,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					032CF40629737CCB0001734A = {
 						CreatedOnToolsVersion = 14.2;
@@ -117,6 +116,9 @@
 				Base,
 			);
 			mainGroup = 032CF3FE29737CCB0001734A;
+			packageReferences = (
+				03693E5C2D1B89C2000C1110 /* XCRemoteSwiftPackageReference "swift-fetch-json" */,
+			);
 			productRefGroup = 032CF40829737CCB0001734A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -146,7 +148,6 @@
 				032CF40D29737CCB0001734A /* ContentView.swift in Sources */,
 				032CF40B29737CCB0001734A /* DadJokeApp.swift in Sources */,
 				032CF4192973818B0001734A /* Joke.swift in Sources */,
-				03377C6E2975B3F300EC450A /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +190,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -249,6 +251,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -283,6 +286,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -312,6 +316,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -347,6 +352,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		03693E5C2D1B89C2000C1110 /* XCRemoteSwiftPackageReference "swift-fetch-json" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dave256/swift-fetch-json";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		03693E5D2D1B89C2000C1110 /* FetchJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 03693E5C2D1B89C2000C1110 /* XCRemoteSwiftPackageReference "swift-fetch-json" */;
+			productName = FetchJSON;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 032CF3FF29737CCB0001734A /* Project object */;
 }

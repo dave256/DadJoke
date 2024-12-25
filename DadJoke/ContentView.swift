@@ -6,15 +6,17 @@
 //
 
 import SwiftUI
+import FetchJSON
 
+@Observable
 @MainActor
-final class JokeModel: ObservableObject {
-    @Published var jokes: [Joke] = []
-    var existingIDs: Set<String> = []
+final class JokeModel {
+    var jokes: [Joke] = []
+    @ObservationIgnored var existingIDs: Set<String> = []
 
     func addNewJoke(jokeID: String = "") {
         Task {
-            let request = jokeID.isEmpty ? Joke.request : Joke.request(jokeID: jokeID)
+            guard let request = jokeID.isEmpty ? Joke.urlRequest(for: .random) : Joke.urlRequest(for: .byID(jokeID)) else { return }
             while (true) {
                 if let joke = await fetchJoke(request: request) {
                     if !existingIDs.contains(joke.id) {
@@ -38,7 +40,6 @@ final class JokeModel: ObservableObject {
                 for joke in jokes.reversed() {
                     if !existingIDs.contains(joke.id) {
                         addJoke(joke)
-                        break
                     }
                 }
             }
@@ -46,51 +47,33 @@ final class JokeModel: ObservableObject {
     }
 
     private func fetchJokeByID(jokeID: String = "EYo4TCAdUf") async -> Joke? {
-        let request = Joke.request(jokeID: jokeID)
+        guard let request = Joke.urlRequest(for: .byID(jokeID)) else {
+            fatalError()
+        }
         return await fetchJoke(request: request)
     }
 
     private func fetchJoke(searchTerm: String) async -> [Joke] {
-        let request = SearchJokes.request(searchTerm: searchTerm)
+        let searchConfig = JokeSearchConfig(searchTerm: searchTerm)
+        guard let request = JokeSearch.urlRequest(for: searchConfig) else {
+            return []
+        }
+        // print(request.url!)
         do {
-            let jokes = try await SearchJokes.fetchAndDecodeJSON(urlRequest: request)
+            let jokes = try await JokeSearch.fetchAndDecode(urlRequest: request)
             return jokes.results
-        } catch FetchAndDecodeError.notHTTPURLResponse(let urlResponse) {
-            print("response error", urlResponse)
-        } catch FetchAndDecodeError.httpStatus(let status) {
-            print("status error code", status)
-        } catch FetchAndDecodeError.decode(let data, let error) {
-            print("decoding error")
-            if let s = String(data: data, encoding: .utf8) {
-                print(s)
-            } else {
-                print(data)
-            }
-            print(error)
-        } catch {
-            print("other fetch error")
+        } catch  {
+            print(error.localizedDescription)
         }
         return []
     }
 
     private func fetchJoke(request: URLRequest) async -> Joke? {
         do {
-            let joke = try await Joke.fetchAndDecodeJSON(urlRequest: request)
+            let joke = try await Joke.fetchAndDecode(urlRequest: request)
             return joke
-        } catch FetchAndDecodeError.notHTTPURLResponse(let urlResponse) {
-            print("response error", urlResponse)
-        } catch FetchAndDecodeError.httpStatus(let status) {
-            print("status error code", status)
-        } catch FetchAndDecodeError.decode(let data, let error) {
-            print("decoding error")
-            if let s = String(data: data, encoding: .utf8) {
-                print(s)
-            } else {
-                print(data)
-            }
-            print(error)
         } catch {
-            print("other fetch error")
+            print(error.localizedDescription)
         }
         return nil
     }
@@ -110,7 +93,7 @@ final class JokeModel: ObservableObject {
 }
 
 struct ContentView: View {
-    @StateObject private var model = JokeModel()
+    @State private var model = JokeModel()
 
     var body: some View {
         NavigationStack {
@@ -146,7 +129,7 @@ struct ContentView: View {
         .task() {
             // make certain at least one joke
             if !model.hasJokes {
-                model.addNewJoke(searchTerm: "computer")
+                model.addNewJoke(searchTerm: "windows")
 //                model.addNewJoke(jokeID: "ozPmbFtWDlb")
             }
         }

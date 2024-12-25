@@ -1,0 +1,15 @@
+{
+  "originHash" : "7395fb08aa139295ea607188ad3e1b3ebc74f2c15095ecffa428754d7b5e9a78",
+  "pins" : [
+    {
+      "identity" : "swift-fetch-json",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dave256/swift-fetch-json",
+      "state" : {
+        "branch" : "main",
+        "revision" : "4b15824ac2bf3e7174ec61114e2b851b6b6b2f68"
+      }
+    }
+  ],
+  "version" : 3
+}
