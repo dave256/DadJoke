@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dave256/swift-fetch-json",
       "state" : {
-        "branch" : "main",
-        "revision" : "4b15824ac2bf3e7174ec61114e2b851b6b6b2f68"
+        "revision" : "cf084696062ff64e0ada9eceb9b0fdc732992e9c",
+        "version" : "1.0.0"
       }
     }
   ],

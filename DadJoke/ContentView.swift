@@ -16,7 +16,9 @@ final class JokeModel {
 
     func addNewJoke(jokeID: String = "") {
         Task {
-            guard let request = jokeID.isEmpty ? Joke.urlRequest(for: .random) : Joke.urlRequest(for: .byID(jokeID)) else { return }
+            guard let request = jokeID.isEmpty ? JokeConfig.randomRequest() : JokeConfig.byIDRequest(
+                id: jokeID) else { return }
+
             while (true) {
                 if let joke = await fetchJoke(request: request) {
                     if !existingIDs.contains(joke.id) {
@@ -47,15 +49,14 @@ final class JokeModel {
     }
 
     private func fetchJokeByID(jokeID: String = "EYo4TCAdUf") async -> Joke? {
-        guard let request = Joke.urlRequest(for: .byID(jokeID)) else {
-            fatalError()
+        guard let request = JokeConfig.byIDRequest(id: jokeID) else {
+            return nil
         }
         return await fetchJoke(request: request)
     }
 
     private func fetchJoke(searchTerm: String) async -> [Joke] {
-        let searchConfig = JokeSearchConfig(searchTerm: searchTerm)
-        guard let request = JokeSearch.urlRequest(for: searchConfig) else {
+        guard let request = JokeSearchConfig.searchRequest(search: searchTerm) else {
             return []
         }
         // print(request.url!)
