@@ -7,9 +7,10 @@
 
 import SwiftUI
 
+@Observable
 @MainActor
-final class JokeModel: ObservableObject {
-    @Published var jokes: [Joke] = []
+final class JokeModel {
+    var jokes: [Joke] = []
     var existingIDs: Set<String> = []
 
     func addNewJoke(jokeID: String = "") {
@@ -110,7 +111,7 @@ final class JokeModel: ObservableObject {
 }
 
 struct ContentView: View {
-    @StateObject private var model = JokeModel()
+    @State private var model = JokeModel()
 
     var body: some View {
         NavigationStack {
