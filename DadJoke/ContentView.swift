@@ -5,8 +5,8 @@
 //  Created by David Reed on 1/14/23.
 //
 
-import SwiftUI
 import FetchJSON
+import SwiftUI
 
 @Observable
 @MainActor
@@ -16,18 +16,25 @@ final class JokeModel {
 
     func addNewJoke(jokeID: String = "") {
         Task {
-            guard let request = jokeID.isEmpty ? JokeConfig.randomRequest() : JokeConfig.byIDRequest(
-                id: jokeID) else { return }
-
-            while (true) {
-                if let joke = await fetchJoke(request: request) {
-                    if !existingIDs.contains(joke.id) {
-                        addJoke(joke)
-                        break
+            let request: JokeRequest
+            if !jokeID.isEmpty {
+                request = JokeRequest.id(jokeID)
+            } else {
+                request = JokeRequest.random
+            }
+            while true {
+                do {
+                    let jokes = try await request.fetch()
+                    if let joke = jokes.first {
+                        if !existingIDs.contains(joke.id) {
+                            addJoke(joke)
+                            break
+                        } else if !jokeID.isEmpty {
+                            break
+                        }
                     }
-                } else {
-                    print("error trying to fetch joke")
-                    break
+                } catch {
+                    print(error)
                 }
             }
         }
@@ -35,49 +42,22 @@ final class JokeModel {
 
     func addNewJoke(searchTerm: String) {
         Task {
-            let jokes = await fetchJoke(searchTerm: searchTerm)
-            if jokes.isEmpty {
-                addNewJoke()
-            } else {
-                for joke in jokes.reversed() {
-                    if !existingIDs.contains(joke.id) {
-                        addJoke(joke)
+            let request = JokeRequest.search(searchTerm)
+            do {
+                let jokes = try await request.fetch()
+                if jokes.isEmpty {
+                    addNewJoke()
+                } else {
+                    for joke in jokes.reversed() {
+                        if !existingIDs.contains(joke.id) {
+                            addJoke(joke)
+                        }
                     }
                 }
             }
         }
     }
 
-    private func fetchJokeByID(jokeID: String = "EYo4TCAdUf") async -> Joke? {
-        guard let request = JokeConfig.byIDRequest(id: jokeID) else {
-            return nil
-        }
-        return await fetchJoke(request: request)
-    }
-
-    private func fetchJoke(searchTerm: String) async -> [Joke] {
-        guard let request = JokeSearchConfig.searchRequest(search: searchTerm) else {
-            return []
-        }
-        // print(request.url!)
-        do {
-            let jokes = try await JokeSearch.fetchAndDecode(urlRequest: request)
-            return jokes.results
-        } catch  {
-            print(error.localizedDescription)
-        }
-        return []
-    }
-
-    private func fetchJoke(request: URLRequest) async -> Joke? {
-        do {
-            let joke = try await Joke.fetchAndDecode(urlRequest: request)
-            return joke
-        } catch {
-            print(error.localizedDescription)
-        }
-        return nil
-    }
 
     private func addJoke(_ joke: Joke) {
         withAnimation {
@@ -127,11 +107,11 @@ struct ContentView: View {
             }
         }
         // runs once when a view appears
-        .task() {
+        .task {
             // make certain at least one joke
             if !model.hasJokes {
                 model.addNewJoke(searchTerm: "windows")
-//                model.addNewJoke(jokeID: "ozPmbFtWDlb")
+                //                model.addNewJoke(jokeID: "ozPmbFtWDlb")
             }
         }
     }
