@@ -35,6 +35,7 @@ final class JokeModel {
                     }
                 } catch {
                     print(error)
+                    break
                 }
             }
         }
@@ -83,7 +84,7 @@ struct ContentView: View {
                     NavigationLink(joke.setup()) {
                         // fire and forget navigation to a view with the full joke
                         VStack {
-                            Text(joke.joke)
+                            Text(joke.jok)
                             Spacer()
                             Text(joke.id)
                             Spacer()

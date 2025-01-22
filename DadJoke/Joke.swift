@@ -10,13 +10,13 @@ import Foundation
 
 struct Joke: Identifiable, Hashable, Codable {
     var id: String
-    var joke: String
+    var jok: String
 }
 
 extension Joke {
     func setup() -> String {
         // first get rid of any whitespace at end and then any punctuation characters at the end
-        let trimmedJoke = joke.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedJoke = jok.trimmingCharacters(in: .whitespacesAndNewlines)
             .trimmingCharacters(in: .punctuationCharacters)
         // now look for last occurence of one of these characters hoping that is where the setup ends
         let setupSeparator: [Character] = [
@@ -26,19 +26,19 @@ extension Joke {
         for ch in setupSeparator {
             // if find one return up to that as the setup
             if let index = trimmedJoke.lastIndex(of: ch) {
-                return String(joke[...index])
+                return String(jok[...index])
             }
         }
 
         // if didn't find any punctuation, look for the word but and return setup as up to but not including "but"
-        if let range = joke.range(
+        if let range = jok.range(
             of: "but", options: [.backwards, .caseInsensitive])
         {
-            return String(joke[..<range.lowerBound])
+            return String(jok[..<range.lowerBound])
         }
 
         // default to returning the entire joke if couldn't find one
-        return joke
+        return jok
     }
 
     static func request(_ requestType: JokeRequest) -> URLRequest? {
